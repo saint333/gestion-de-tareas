@@ -8,7 +8,11 @@ import {
   computed,
   signal,
 } from '@angular/core';
-import { TodoModel, TypePriority, TypePriorityRender, TypePriorityVisibled } from '../../models/todo';
+import {
+  TodoModel,
+  TypePriorityRender,
+  TypePriorityVisibled,
+} from '../../models/todo';
 import {
   FormControl,
   FormGroup,
@@ -16,6 +20,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ModalService } from '../../services/modal/modal.service';
+import { TodoService } from '../../services/todo/todo.service';
 
 @Component({
   selector: 'app-modal-add-todo',
@@ -27,9 +32,8 @@ import { ModalService } from '../../services/modal/modal.service';
 export class ModalAddTodoComponent implements OnInit {
   @Input() title: string = '';
   @Input() detail: TodoModel | undefined;
-  @Output() onSave = new EventEmitter<TodoModel>();
 
-  errorForm = false
+  errorForm = false;
   listLabel = signal<{ id: number; text: string }[]>([]);
 
   listLabels = computed(() => {
@@ -57,7 +61,7 @@ export class ModalAddTodoComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    priority: new FormControl<TypePriority | string>('', {
+    priority: new FormControl<TypePriorityVisibled | string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -66,16 +70,16 @@ export class ModalAddTodoComponent implements OnInit {
     }),
   });
 
-  constructor(private modal: ModalService) {}
+  constructor(private modal: ModalService, private todoService: TodoService) {}
 
   ngOnInit() {
     if (this.detail) {
       this.formDetail.patchValue({
-        title: this.detail?.title,
-        completed: this.detail?.completed,
-        description: this.detail?.description,
-        expired: this.detail?.dateExpired,
-        priority: this.detail?.priority,
+        title: this.detail.title,
+        completed: this.detail.completed,
+        description: this.detail.description,
+        expired: this.detail.dateExpired,
+        priority: this.detail.priority,
       });
       this.listLabel.update((list) => list.concat(this.detail?.labels || []));
     }
@@ -110,23 +114,27 @@ export class ModalAddTodoComponent implements OnInit {
   }
 
   handleSave() {
-    this.errorForm = false
+    this.errorForm = false;
     if (this.formDetail.valid && this.listLabel().length) {
       const form = this.formDetail.value;
       const detail: TodoModel = {
         id: this.detail?.id || Date.now(),
         completed: form.completed || false,
         title: form.title || '',
-        dateExpired: form.expired || "",
-        description: form.description,
+        dateExpired: form.expired || '',
+        description: form.description || '',
         labels: this.listLabel(),
-        priority: TypePriorityRender[form?.priority as TypePriority || "low"],
+        priority: TypePriorityRender[(form?.priority as TypePriorityVisibled) || 'baja'],
         editing: false,
       };
-      this.onSave.emit(detail);
+      if (this.detail) {
+        this.todoService.addTodoEdited(detail)
+      }else{
+        this.todoService.addNewTodo(detail)
+      }
       this.handleClickCancel();
-    }else{
-      this.errorForm = true
+    } else {
+      this.errorForm = true;
     }
   }
 }

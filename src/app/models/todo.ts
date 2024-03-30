@@ -1,9 +1,8 @@
-export type TypePriority = "high" | "medium" | "low" | ""
 export type TypePriorityVisibled = "alta" | "media" | "baja" | ""
 export enum TypePriorityRender{
-  high = "alta",
-  medium = "media",
-  low = "baja"
+  alta = "alta",
+  media = "media",
+  baja = "baja"
 }
 
 export interface TodoModel {
@@ -11,10 +10,10 @@ export interface TodoModel {
   title: string;
   completed: boolean;
   editing?: boolean;
-  description?: string;
+  description: string;
   dateExpired: string;
   priority: TypePriorityVisibled;
-  labels?: {id: number, text: string}[];
+  labels: {id: number, text: string}[];
 }
 
 export type FilterType = "all" | "active" | "completed" | "date" | "priority" | string;

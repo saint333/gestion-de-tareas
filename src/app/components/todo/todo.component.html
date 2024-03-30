@@ -100,7 +100,6 @@
 @if (modalState) {
 <app-modal-add-todo
   title="Crear Tareas"
-  (onSave)="recieveTodo($event)"
   [detail]="todoEdited()"
 ></app-modal-add-todo>
 }
