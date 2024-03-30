@@ -15,13 +15,13 @@
 }
 
 .filters {
-  @apply flex flex-col sm:flex-row justify-end gap-2 my-2;
+  @apply flex flex-col md:flex-row justify-between gap-2 my-2;
 }
 
 .filters button,
 .filters input,
 .filters select {
-  @apply p-2 rounded-lg bg-slate-700 outline-none;
+  @apply p-2 rounded-lg bg-slate-700 outline-none w-full text-lg;
 }
 
 .filters button.active,

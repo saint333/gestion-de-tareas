@@ -35,6 +35,23 @@ export class TodoComponent implements OnInit {
         return todos.filter((todo) => !todo.completed);
       case 'completed':
         return todos.filter((todo) => todo.completed);
+      case 'priority':
+        return todos.sort((todoA, todoB) => {
+          const prioridades = { baja: 3, media: 2, alta: 1 };
+
+          // Obtener el valor de prioridad para cada objeto
+          const prioridadA = prioridades[todoA.priority || 'baja'];
+          const prioridadB = prioridades[todoB.priority || 'baja'];
+
+          // Comparar los valores de prioridad
+          return prioridadA - prioridadB;
+        });
+      case 'date':
+        return todos.sort((todoA, todoB) => {
+          const dateA = new Date(todoA.dateExpired);
+          const dateB = new Date(todoB.dateExpired);
+          return dateA.getTime() - dateB.getTime();
+        });
       case this.priority.value:
         return todos.filter((todo) => todo.priority === this.priority.value);
       case this.date.value:
@@ -67,8 +84,7 @@ export class TodoComponent implements OnInit {
     const index = this.todolist().findIndex((list) => list.id === todo.id);
     this.todolist.update((prev_todos) => {
       if (index !== -1) {
-        prev_todos[index] = todo;
-        return prev_todos;
+        return [...prev_todos.filter((list) => list.id !== todo.id), todo];
       } else {
         return [...prev_todos, todo];
       }
@@ -84,6 +100,8 @@ export class TodoComponent implements OnInit {
       this.filter.set(this.date.value);
       this.priority.patchValue('');
     } else {
+      console.log(this.priority.value);
+      
       this.filter.set(this.priority.value);
       this.date.patchValue('');
     }

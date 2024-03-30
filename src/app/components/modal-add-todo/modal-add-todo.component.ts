@@ -8,7 +8,7 @@ import {
   computed,
   signal,
 } from '@angular/core';
-import { TodoModel, TypePriority } from '../../models/todo';
+import { TodoModel, TypePriority, TypePriorityRender, TypePriorityVisibled } from '../../models/todo';
 import {
   FormControl,
   FormGroup,
@@ -117,10 +117,10 @@ export class ModalAddTodoComponent implements OnInit {
         id: this.detail?.id || Date.now(),
         completed: form.completed || false,
         title: form.title || '',
-        dateExpired: form.expired,
+        dateExpired: form.expired || "",
         description: form.description,
         labels: this.listLabel(),
-        priority: form.priority as TypePriority,
+        priority: TypePriorityRender[form?.priority as TypePriority || "low"],
         editing: false,
       };
       this.onSave.emit(detail);
