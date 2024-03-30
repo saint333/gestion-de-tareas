@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalAddTodoComponent } from '../modal-add-todo/modal-add-todo.component';
 import { ModalService } from '../../services/modal/modal.service';
+import { TodoService } from '../../services/todo/todo.service';
 
 @Component({
   selector: 'app-todo',
@@ -14,7 +15,7 @@ import { ModalService } from '../../services/modal/modal.service';
 })
 export class TodoComponent implements OnInit {
   modalState: boolean = false;
-  todolist = signal<TodoModel[]>([]);
+  todoList = signal<TodoModel[]>([]);
   filter = signal<FilterType>('all');
   todoEditing = signal<TodoModel | undefined>(undefined);
 
@@ -28,7 +29,7 @@ export class TodoComponent implements OnInit {
 
   todoListFiltered = computed(() => {
     const filter = this.filter();
-    const todos = this.todolist();
+    const todos = this.todoList();
 
     switch (filter) {
       case 'active':
@@ -39,11 +40,9 @@ export class TodoComponent implements OnInit {
         return todos.sort((todoA, todoB) => {
           const prioridades = { baja: 3, media: 2, alta: 1 };
 
-          // Obtener el valor de prioridad para cada objeto
           const prioridadA = prioridades[todoA.priority || 'baja'];
           const prioridadB = prioridades[todoB.priority || 'baja'];
 
-          // Comparar los valores de prioridad
           return prioridadA - prioridadB;
         });
       case 'date':
@@ -65,30 +64,20 @@ export class TodoComponent implements OnInit {
     return this.todoEditing();
   });
 
-  constructor(private modal: ModalService) {
+  constructor(private modal: ModalService, private todoService: TodoService) {
     effect(() => {
-      localStorage.setItem('todos', JSON.stringify(this.todolist()));
+      localStorage.setItem('todos', JSON.stringify(this.todoList()));
     });
   }
 
   ngOnInit() {
-    const storage = localStorage.getItem('todos');
-    if (storage) {
-      this.todolist.set(JSON.parse(storage));
-    }
-
+    this.todoService.getTodos.subscribe(todos => {
+      this.todoList.update(()=> {
+        localStorage.setItem('todos', JSON.stringify(todos))
+        return todos
+      })
+    })
     this.modal.$modal.subscribe((value) => (this.modalState = value));
-  }
-
-  recieveTodo(todo: TodoModel) {
-    const index = this.todolist().findIndex((list) => list.id === todo.id);
-    this.todolist.update((prev_todos) => {
-      if (index !== -1) {
-        return [...prev_todos.filter((list) => list.id !== todo.id), todo];
-      } else {
-        return [...prev_todos, todo];
-      }
-    });
   }
 
   changeFilter(filterString: FilterType) {
@@ -118,7 +107,7 @@ export class TodoComponent implements OnInit {
   }
 
   toggleTodo(todoId: number) {
-    this.todolist.update((prev_todos) =>
+    this.todoList.update((prev_todos) =>
       prev_todos.map((todo) => {
         return todo.id === todoId
           ? {
@@ -131,8 +120,6 @@ export class TodoComponent implements OnInit {
   }
 
   removeTodo(todoId: number) {
-    this.todolist.update((prev_todos) =>
-      prev_todos.filter((todo) => todo.id !== todoId)
-    );
+    this.todoService.deleteTodo(todoId)
   }
 }
