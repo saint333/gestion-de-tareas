@@ -1,60 +1,58 @@
-.todolist-wrapper{
-  @apply bg-slate-900 p-8 w-fit mt-8 mx-auto rounded-lg;
+.todolist-wrapper {
+  @apply bg-slate-900 p-5 sm:p-14 w-full mx-auto rounded-lg h-[100vh];
 }
 
-.title{
+.title {
   @apply text-3xl font-bold text-center mb-4;
 }
 
-.new-todo{
-  @apply relative flex items-center rounded-lg overflow-hidden;
+.new-todo {
+  @apply relative flex items-center;
 }
 
-.new-todo input{
-  @apply w-64 p-2 rounded-lg bg-slate-700 outline-none;
+.new-todo button {
+  @apply bg-slate-500 text-lg font-medium h-full px-2 text-white rounded-lg;
 }
 
-.new-todo button{
-  @apply absolute right-0 bg-slate-500 text-lg font-black h-full px-2;
+.filters {
+  @apply flex flex-col sm:flex-row justify-end gap-2 my-2;
 }
 
-.filters{
-  @apply flex justify-end gap-2 my-2;
+.filters button,
+.filters input,
+.filters select {
+  @apply p-2 rounded-lg bg-slate-700 outline-none;
 }
 
-.filters button{
-  @apply px-2 rounded-lg bg-slate-700;
-}
-
-.filters button.active{
+.filters button.active,
+.filters input.active,
+.filters select.active {
   @apply bg-slate-500;
 }
 
-.todolist{
-  @apply flex flex-col gap-2;
+.todolist {
+  @apply gap-2 mt-6;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 }
 
-.todolist li{
-  @apply flex bg-slate-700 px-4 py-2 rounded-lg items-center gap-2;
+.todolist li {
+  @apply flex flex-col bg-slate-700 px-4 py-2 rounded-lg gap-2;
 }
 
-.todolist li.todo label{
-  @apply flex-1;
+.todolist li.todo label {
+  @apply flex-1 text-2xl border-b-2 pb-2;
 }
 
-.todolist li.todo:hover button{
+.todolist li.todo:hover button {
   @apply visible;
 }
 
-.todolist li.todo button{
+.todolist li.todo button {
   @apply text-xs;
-  visibility: hidden
+  visibility: hidden;
 }
 
-.todolist li.todo input[type="checkbox"]{
+.todolist li.todo input[type="checkbox"] {
   @apply w-4 h-4 cursor-pointer;
-}
-
-.todolist li.todo-editing input[type="text"]{
-  @apply w-full bg-slate-500 rounded-lg px-2 outline-none;
 }

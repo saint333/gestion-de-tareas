@@ -1,0 +1,113 @@
+<div class="modal-init">
+  <div class="modal-back"></div>
+
+  <div class="modal">
+    <div class="modal-content">
+      <div class="modal-structure">
+        <div class="modal-header">
+          <h3
+            class="text-xl font-semibold leading-6 text-gray-900"
+            id="modal-title"
+          >
+            @if (detail) {
+              Agregar tarea
+            } @else {
+              Editar tarea
+            }
+          </h3>
+          <button (click)="handleClickCancel()">X</button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formDetail">
+            <label for="title">
+              <span>Titulo</span>
+              <input
+                type="text"
+                formControlName="title"
+                placeholder="Escriba un titulo"
+                id="title"
+              />
+            </label>
+            <label for="completed" class="change-input">
+              <input
+                type="checkbox"
+                name="completed"
+                id="completed"
+                [checked]="detail?.completed"
+                formControlName="completed"
+              />
+              <span>Tarea completada</span>
+            </label>
+            <label for="description">
+              <span>Descripción</span>
+              <textarea
+                name="description"
+                rows="4"
+                id="description"
+                placeholder="Escriba una descripción"
+                formControlName="description"
+              ></textarea>
+            </label>
+            <label for="expired">
+              <span>Fecha de vencimiento</span>
+              <input
+                type="date"
+                name="expired"
+                id="expired"
+                formControlName="expired"
+              />
+            </label>
+            <label for="priority">
+              <span>Prioridad</span>
+              <select name="priority" id="priority" formControlName="priority">
+                <option value="" selected disabled>--Elija una opción</option>
+                <option value="high">Alta</option>
+                <option value="medium">Media</option>
+                <option value="low">Baja</option>
+              </select>
+            </label>
+            <label for="labels">
+              <span>Etiquetas</span>
+              <input
+                type="text"
+                id="labels"
+                placeholder="Escriba una etiqueta"
+                (keydown.space)="handleSpace()"
+                (keydown.enter)="handleSpace()"
+                formControlName="label"
+              />
+              <div class="list-labels">
+                @if (listLabels()) { @for (item of listLabels(); track item) {
+                <span>{{ item.text }} <span class="deleted"></span></span>
+                } }
+              </div>
+            </label>
+          </form>
+          @if (errorForm) {
+          <div class="bg-red-500 p-3 rounded-lg text-white">
+            Completar los campos
+          </div>
+          }
+        </div>
+        <div class="modal-footer">
+          @if (detail) {
+          <button type="button" class="button-green" (click)="handleSave()">
+            Actualizar
+          </button>
+          }@else {
+          <button type="button" class="button-green" (click)="handleSave()">
+            Guardar
+          </button>
+          }
+          <button
+            type="button"
+            class="button-gray"
+            (click)="handleClickCancel()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

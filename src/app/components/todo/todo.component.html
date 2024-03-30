@@ -1,8 +1,7 @@
 <section class="todolist-wrapper">
-  <h1 class="title">TODO APP</h1>
+  <h1 class="title">GESTIÓN DE TAREAS</h1>
   <div class="new-todo">
-    <input type="text" (keydown.enter)="addTodo()" placeholder="Escribe una nueva tarea" [formControl]="newTodo"/>
-    <button (click)="addTodo()">+</button>
+    <button (click)="addTodo('add')">+ Nuevo</button>
   </div>
   <div class="filters">
     <button (click)="changeFilter('all')" [class.active]="filter() === 'all'">
@@ -20,24 +19,71 @@
     >
       Completados
     </button>
+    <input
+      type="date"
+      (change)="dateValidator('date')"
+      [class.active]="filter() === date.value"
+      [formControl]="date"
+    />
+    <select
+      (change)="dateValidator('priority')"
+      [class.active]="filter() === priority.value"
+      [formControl]="priority"
+    >
+      <option value="" selected disabled>--elija--</option>
+      <option value="high">Alta</option>
+      <option value="medium">Media</option>
+      <option value="low">Baja</option>
+    </select>
   </div>
 
   <ul class="todolist">
     @for (todo of todoListFiltered(); track todo.id) {
-      @if (todo.editing) {
-        <li class="todo-editing">
-          <input type="text" placeholder="Editar tarea" [value]="todo.title" (keydown.enter)="saveTitleTodo(todo.id, $event)"/>
-        </li>
-      } @else {
-        <li class="todo">
-          <input type="checkbox" [checked]="todo.completed" (click)="toggleTodo(todo.id)"/>
-          <label>{{todo.title}}</label>
-          @if (!todo.completed) {
-            <button (click)="updateTodoEditingMode(todo.id)">Editar</button>
-          }
-          <button class="text-red-500" (click)="removeTodo(todo.id)">Eliminar</button>
-        </li>
-      }
+    <li class="todo">
+      <label class="flex items-center gap-2 justify-between">
+        <div>
+          <input
+            type="checkbox"
+            [checked]="todo.completed"
+            (click)="toggleTodo(todo.id)"
+          />
+
+          {{ todo.title }}
+        </div>
+        <div>
+          <button
+            class="bg-green-500 h-fit p-2 mt-2 rounded-lg font-medium mr-2"
+            (click)="addTodo('editing', todo)"
+          >
+            Editar
+          </button>
+          <button
+            class="bg-red-500 h-fit p-2 mt-2 rounded-lg font-medium"
+            (click)="removeTodo(todo.id)"
+          >
+            Eliminar
+          </button>
+        </div>
+      </label>
+      <p>
+        <strong>Descripción:</strong> {{ todo.description }} <br />
+        <strong>Estado:</strong>
+        {{ todo.completed ? "Completado" : "Pendiente" }} <br />
+        <strong>Fecha de vencimiento:</strong> {{ todo.dateExpired }} <br />
+        <strong>Prioridad:</strong> {{ todo.priority }} <br />
+        <strong>Etiquetas:</strong> @for (label of todo.labels; track label.id)
+        {
+        {{ label.text }}
+        }
+      </p>
+    </li>
     }
   </ul>
 </section>
+@if (modalState) {
+<app-modal-add-todo
+  title="Crear Tareas"
+  (onSave)="recieveTodo($event)"
+  [detail]="todoEdited()"
+></app-modal-add-todo>
+}
