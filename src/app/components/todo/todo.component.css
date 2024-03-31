@@ -31,9 +31,9 @@
 }
 
 .todolist {
-  @apply gap-2 mt-6;
+  @apply gap-2 mt-6 pb-6;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
 }
 
 .todolist li {
