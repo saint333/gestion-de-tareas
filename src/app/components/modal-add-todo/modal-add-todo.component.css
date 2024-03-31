@@ -1,5 +1,8 @@
 .modal-init {
   @apply relative z-10;
+  *{
+    color: black;
+  }
 }
 
 .modal-back {
