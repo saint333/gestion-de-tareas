@@ -9,11 +9,7 @@
             class="text-xl font-semibold leading-6 text-gray-900"
             id="modal-title"
           >
-            @if (detail) {
-              Editar tarea
-            } @else {
-              Agregar tarea
-            }
+            @if (todoEditing.length) { Editar tarea } @else { Agregar tarea }
           </h3>
           <button (click)="handleClickCancel()">X</button>
         </div>
@@ -33,7 +29,6 @@
                 type="checkbox"
                 name="completed"
                 id="completed"
-                [checked]="detail?.completed"
                 formControlName="completed"
               />
               <span>Tarea completada</span>
@@ -78,7 +73,7 @@
               />
               <div class="list-labels">
                 @if (listLabels()) { @for (item of listLabels(); track item) {
-                <span>{{ item.text }} <span class="deleted"></span></span>
+                <span>{{ item.text }} <span class="deleted" (click)="removeTag(item.id)"></span></span>
                 } }
               </div>
             </label>
@@ -90,7 +85,7 @@
           }
         </div>
         <div class="modal-footer">
-          @if (detail) {
+          @if (todoEditing.length) {
           <button type="button" class="button-green" (click)="handleSave()">
             Actualizar
           </button>

@@ -9,7 +9,6 @@ export interface TodoModel {
   id: number;
   title: string;
   completed: boolean;
-  editing?: boolean;
   description: string;
   dateExpired: string;
   priority: TypePriorityVisibled;
