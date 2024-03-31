@@ -19,7 +19,7 @@ import { TodoService } from '../../services/todo/todo.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './modal-add-todo.component.html',
-  styleUrl: './modal-add-todo.component.css',
+  styleUrls: ['./modal-add-todo.component.css', './modal.css', './modal-completed.css'],
 })
 export class ModalAddTodoComponent implements OnInit {
   todoEditing: TodoModel[] = [];
