@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, effect, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { FilterType, TodoModel } from '../../models/todo';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,15 +17,9 @@ export class TodoComponent implements OnInit {
   modalState: boolean = false;
   todoList = signal<TodoModel[]>([]);
   filter = signal<FilterType>('all');
-  todoEditing = signal<TodoModel | undefined>(undefined);
 
-  date = new FormControl('', {
-    nonNullable: true,
-  });
-
-  priority = new FormControl('', {
-    nonNullable: true,
-  });
+  date = new FormControl('', { nonNullable: true });
+  priority = new FormControl('', { nonNullable: true });
 
   todoListFiltered = computed(() => {
     const filter = this.filter();
@@ -39,17 +33,17 @@ export class TodoComponent implements OnInit {
       case 'priority':
         return todos.sort((todoA, todoB) => {
           const prioridades = { baja: 3, media: 2, alta: 1 };
-
-          const prioridadA = prioridades[todoA.priority || 'baja'];
-          const prioridadB = prioridades[todoB.priority || 'baja'];
-
-          return prioridadA - prioridadB;
+          return (
+            prioridades[todoA.priority || 'baja'] -
+            prioridades[todoB.priority || 'baja']
+          );
         });
       case 'date':
         return todos.sort((todoA, todoB) => {
-          const dateA = new Date(todoA.dateExpired);
-          const dateB = new Date(todoB.dateExpired);
-          return dateA.getTime() - dateB.getTime();
+          return (
+            new Date(todoA.dateExpired).getTime() -
+            new Date(todoB.dateExpired).getTime()
+          );
         });
       case this.priority.value:
         return todos.filter((todo) => todo.priority === this.priority.value);
@@ -60,23 +54,13 @@ export class TodoComponent implements OnInit {
     }
   });
 
-  todoEdited = computed(() => {
-    return this.todoEditing();
-  });
-
-  constructor(private modal: ModalService, private todoService: TodoService) {
-    effect(() => {
-      localStorage.setItem('todos', JSON.stringify(this.todoList()));
-    });
-  }
+  constructor(private modal: ModalService, private todoService: TodoService) {}
 
   ngOnInit() {
-    this.todoService.getTodos.subscribe(todos => {
-      this.todoList.update(()=> {
-        localStorage.setItem('todos', JSON.stringify(todos))
-        return todos
-      })
-    })
+    this.todoService.getTodos.subscribe((todos) => {
+      localStorage.setItem('todos', JSON.stringify(todos));
+      this.todoList.update(() => todos);
+    });
     this.modal.$modal.subscribe((value) => (this.modalState = value));
   }
 
@@ -89,37 +73,30 @@ export class TodoComponent implements OnInit {
       this.filter.set(this.date.value);
       this.priority.patchValue('');
     } else {
-      console.log(this.priority.value);
-      
       this.filter.set(this.priority.value);
       this.date.patchValue('');
     }
   }
 
-  addTodo(text: string, todo?: TodoModel) {
-    if (text === 'editing') {
-      this.todoEditing.update((value) => (value = todo));
-    } else {
-      this.todoEditing.update((value) => (value = undefined));
-    }
+  addTodo() {
+    this.modal.addNewTodo();
+    this.modalState = true;
+  }
 
+  editingTodo(todo: TodoModel) {
+    this.modal.edtingTodo(todo);
     this.modalState = true;
   }
 
   toggleTodo(todoId: number) {
     this.todoList.update((prev_todos) =>
-      prev_todos.map((todo) => {
-        return todo.id === todoId
-          ? {
-              ...todo,
-              completed: !todo.completed,
-            }
-          : todo;
-      })
+      prev_todos.map((todo) =>
+        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
+      )
     );
   }
 
   removeTodo(todoId: number) {
-    this.todoService.deleteTodo(todoId)
+    this.todoService.deleteTodo(todoId);
   }
 }

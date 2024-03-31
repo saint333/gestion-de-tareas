@@ -1,7 +1,7 @@
 <section class="todolist-wrapper">
   <h1 class="title">GESTIÓN DE TAREAS</h1>
   <div class="new-todo">
-    <button (click)="addTodo('add')">+ Nuevo</button>
+    <button (click)="addTodo()">+ Nuevo</button>
   </div>
   <div class="filters">
     <p class="flex flex-col md:flex-row gap-2 items-center">
@@ -70,7 +70,7 @@
         <div>
           <button
             class="bg-green-500 h-fit p-2 mt-2 rounded-lg font-medium mr-2"
-            (click)="addTodo('editing', todo)"
+            (click)="editingTodo(todo)"
           >
             Editar
           </button>
@@ -98,8 +98,5 @@
   </ul>
 </section>
 @if (modalState) {
-<app-modal-add-todo
-  title="Crear Tareas"
-  [detail]="todoEdited()"
-></app-modal-add-todo>
+<app-modal-add-todo></app-modal-add-todo>
 }
