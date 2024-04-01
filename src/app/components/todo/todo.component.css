@@ -14,22 +14,6 @@
   @apply bg-slate-500 text-lg font-medium h-full px-2 text-white rounded-lg;
 }
 
-.filters {
-  @apply flex flex-col md:flex-row justify-between gap-2 my-2;
-}
-
-.filters button,
-.filters input,
-.filters select {
-  @apply p-2 rounded-lg bg-slate-700 outline-none w-full text-lg;
-}
-
-.filters button.active,
-.filters input.active,
-.filters select.active {
-  @apply bg-slate-500;
-}
-
 .todolist {
   @apply gap-2 mt-6 pb-6;
   display: grid;

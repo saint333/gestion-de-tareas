@@ -15,4 +15,4 @@ export interface TodoModel {
   labels: {id: number, text: string}[];
 }
 
-export type FilterType = "all" | "active" | "completed" | "date" | "priority" | string;
+export type FilterType = "all" | "active" | "completed" | "date" | "priority" | "changeDate" | "changePriority" | string;

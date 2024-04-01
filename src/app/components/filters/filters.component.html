@@ -1,0 +1,50 @@
+<div class="filters">
+  <p class="flex flex-col md:flex-row gap-2 items-center">
+    <strong class="text-nowrap">Ordenar por:</strong>
+    <button
+      (click)="changeFilter('date')"
+      [class.active]="filter === 'date'"
+    >
+      Fecha
+    </button>
+    <button
+      (click)="changeFilter('priority')"
+      [class.active]="filter === 'priority'"
+    >
+      Prioridad
+    </button>
+  </p>
+  <p class="flex flex-col md:flex-row gap-2 items-center">
+    <button (click)="changeFilter('all')" [class.active]="filter === 'all'">
+      Todas
+    </button>
+    <button
+      (click)="changeFilter('active')"
+      [class.active]="filter === 'active'"
+    >
+      Activos
+    </button>
+    <button
+      (click)="changeFilter('completed')"
+      [class.active]="filter === 'completed'"
+    >
+      Completados
+    </button>
+    <input
+      type="date"
+      (change)="changeFilter('changeDate')"
+      [class.active]="filter === date.value"
+      [formControl]="date"
+    />
+    <select
+      (change)="changeFilter('changePriority')"
+      [class.active]="filter === priority.value"
+      [formControl]="priority"
+    >
+      <option value="" selected disabled>--elija--</option>
+      <option value="alta">Alta</option>
+      <option value="media">Media</option>
+      <option value="baja">Baja</option>
+    </select>
+  </p>
+</div>
