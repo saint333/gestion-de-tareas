@@ -7,24 +7,24 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ModalService {
   private todo: TodoModel[] = [];
-  private _todoEdited: BehaviorSubject<TodoModel[]>
+  private _todoAddAndEdited: BehaviorSubject<TodoModel[]>
   constructor() {
-    this._todoEdited = new BehaviorSubject<TodoModel[]>([]);
+    this._todoAddAndEdited = new BehaviorSubject<TodoModel[]>([]);
   }
 
-  get todoEdit(){
-    return this._todoEdited.asObservable();
+  get todoAddAndEdited(){
+    return this._todoAddAndEdited.asObservable();
   }
 
   $modal = new EventEmitter<boolean>();
 
   addNewTodo(){
     this.todo = []
-    this._todoEdited.next(this.todo)
+    this._todoAddAndEdited.next(this.todo)
   }
 
   edtingTodo(todoEdit: TodoModel) {
     this.todo = [todoEdit]
-    this._todoEdited.next(this.todo)
+    this._todoAddAndEdited.next(this.todo)
   }
 }

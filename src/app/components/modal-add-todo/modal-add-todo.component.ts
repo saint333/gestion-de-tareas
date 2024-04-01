@@ -52,7 +52,7 @@ export class ModalAddTodoComponent implements OnInit {
   constructor(private modal: ModalService, private todoService: TodoService) {}
 
   ngOnInit() {
-    this.modal.todoEdit.subscribe(([value]) => {
+    this.modal.todoAddAndEdited.subscribe(([value]) => {
       if (value) {
         this.formDetail.patchValue({
           title: value.title,
